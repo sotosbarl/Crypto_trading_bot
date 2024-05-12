@@ -425,4 +425,4 @@ for crypto in cryptos:
 
         st.pyplot(fig)
 
-     
+st.write("No more actions right now")
