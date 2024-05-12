@@ -314,183 +314,115 @@ for crypto in cryptos:
 
 
 
-    for i in range(len(close_price_df)-30,len(close_price_df)):
-        #price = float(auth_client.get_product_ticker(product_id='USDT-EUR')['price'])
-        # close_price_list = np.delete(close_price_list,0)
 
-        #close_price_list = np.append(close_price_list,price)
-        # print('price',price)
-        #
-        # MACD_line_list[:], ema100_list[:], ema_of_MACD_list[:], close_price_df, \
-        # Stochastic_line[:], sma_list[:], K_line_list[:], bollinger_down_list[:] = update_crypto_data(close_price_list)
-        #
-        #
-        #
-        # print/(i)
-        lastx_list = close_price_list[i - 10:i]  # 140
+    i = len(close_price_df) - 1
+    
+    lastx_list = close_price_list[i - 10:i]  # 140
 
-        is_dowentrend = detect_downtrend(lastx_list)
+    is_dowentrend = detect_downtrend(lastx_list)
 
-        
-        #print(lastx_list)
+    
+    #print(lastx_list)
 
-        day_min = min(lastx_list)
-        rsi_current = rsi(close_price_df.iloc[i- 14:i])
-        # rsi_previous = rsi(close_price_df.iloc[-1 - 15:-2])
-        # price_list.append(price)
+    day_min = min(lastx_list)
+    rsi_current = rsi(close_price_df.iloc[i- 14:i])
+    # rsi_previous = rsi(close_price_df.iloc[-1 - 15:-2])
+    # price_list.append(price)
 
-        #
-        # buy_price_initial = 0
-        #
-        #
-        # if open_trade:
-
-
-            # if ((close_price_list[i] < buy_price - stop_limit) and open_trade) or (
-            #         (close_price_list[i] > buy_price + stop_limit) and open_trade):
-        
-
-            
-        # else:
-        #
-
-        #
-        for minute_before in range(2, 5):
-            if (Stochastic_line[i - minute_before - 1] > K_line_list[i - minute_before - 1]) and (
-                    Stochastic_line[i - minute_before] < K_line_list[i - minute_before]):
-                cross2 = True
-                break
-            else:
-                cross2 = False
-            
-            if ((ema_of_MACD_list[i] < MACD_line_list[i]) and (
-                    ema_of_MACD_list[i-1] > MACD_line_list[i-1])):
-                cross3 = True
-                break
-            
-            else:
-                cross3 = False
-
-            if (Stochastic_line[i - minute_before] < 15):
-                cross = True
-                break
-            else:
-                cross = False
-        #
-        array_data = [MACD_line_list[i], ema100_list[i], ema_of_MACD_list[i], Stochastic_line[i], sma_list[i],
-                    rsi_current]
-        array_data = np.array(array_data)
-        array_data = array_data.reshape(1, -1)
-
-        #print(loaded_model.predict(array_data))
-
-        if close_price_list[i]>bollinger_up_list[i] or (close_price_list[i]< buy_price - (bollinger_up_list[i]-bollinger_down_list[i])/1 ):
-           
-        
-            point_list.append(i)
-
-            print("YOU HAVE TO SELL:",crypto)
-            st.write("YOU HAVE TO BUY:",crypto)
-
-            fig, ax = plt.subplots()
-            ax.plot(range(0, len(close_price_df)), close_price_list, label='Closing Prices')
-            ax.plot(range(0, len(close_price_df)), bollinger_down_list, label='Bollinger Up', c='black')
-            ax.plot(range(0,len(close_price_df)), bollinger_up_list, label='Bollinger Down', c='black')
-            ax.plot(range(0, len(close_price_df)), sma_list, label='SMA', c='b')
-            ax.set_title(f'{crypto}-EUR Price')
-
-            for i in range(len(point_list)):
-                ax.plot(point_list[i], close_price_list[point_list[i]], 'o',color='red')
-
-            st.pyplot(fig)
-
-
-        if (rsi_current < 30) and (not open_trade) and (cross2)  and cross and (
-
-        bollinger_down_list[i] > close_price_list[i]):# and not is_dowentrend:
-            # and loaded_model.predict(array_data):
-    #       
-            print("YOU HAVE TO BUY:",crypto)
-            st.write("YOU HAVE TO BUY:",crypto)
-
-            point_list2.append(i)
-
-
-            print(point_list2)
-
-            fig, ax = plt.subplots()
-
-            ax.plot(range(0, len(close_price_df)), close_price_list, label='Closing Prices')
-            ax.plot(range(0, len(close_price_df)), bollinger_down_list, label='Bollinger Up', c='black')
-            ax.plot(range(0,len(close_price_df)), bollinger_up_list, label='Bollinger Down', c='black')
-            ax.plot(range(0, len(close_price_df)), sma_list, label='SMA', c='b')
-
-            ax.set_title(f'{crypto}-EUR Price')
-
-
-            for i in range(len(point_list2)):
-                ax.plot(point_list2[i], close_price_list[point_list2[i]],'o',color='green')
-            
-            # ax.show()
-
-            st.pyplot(fig)
-
-            # wallet_btc, wallet_euro = buy(close_price_list[i], wallet_euro, wallet_btc)
-            # auth_client.place_market_order(product_id='USDT-EUR',
-            #                                    side='buy',
-            #                                    funds='20')
-
-            # accounts = auth_client.get_accounts()
-
-
-            # open_trade = True
-            # point_list2.append(i)
-            # buy_price = close_price_list[i]
-            # buy_price_initial = buy_price
-
-            # buy_price = close_price_list[i]
-            # buy_price_initial = buy_price
-            # stop_limit = buy_price - day_min
-            # day_min2 = day_min
-            # num_of_transactions += 1
-
-
-
+    #
+    # buy_price_initial = 0
+    #
+    #
     # if open_trade:
-    #     wallet_btc, wallet_euro = sell(close_price_list[i], wallet_euro, wallet_btc)
 
 
-#     print('eur', wallet_euro)
-#     print('btc', wallet_btc)
-#     print('num_of_transactions', num_of_transactions)
-#     print('winner_trades', len(winner_trades))
-#     print('loser_trades', len(loser_trades))
+        # if ((close_price_list[i] < buy_price - stop_limit) and open_trade) or (
+        #         (close_price_list[i] > buy_price + stop_limit) and open_trade):
+    
+
+        
+    # else:
+    #
+
+    #
+    for minute_before in range(2, 5):
+        if (Stochastic_line[i - minute_before - 1] > K_line_list[i - minute_before - 1]) and (
+                Stochastic_line[i - minute_before] < K_line_list[i - minute_before]):
+            cross2 = True
+            break
+        else:
+            cross2 = False
+        
+        if ((ema_of_MACD_list[i] < MACD_line_list[i]) and (
+                ema_of_MACD_list[i-1] > MACD_line_list[i-1])):
+            cross3 = True
+            break
+        
+        else:
+            cross3 = False
+
+        if (Stochastic_line[i - minute_before] < 15):
+            cross = True
+            break
+        else:
+            cross = False
+    #
+    array_data = [MACD_line_list[i], ema100_list[i], ema_of_MACD_list[i], Stochastic_line[i], sma_list[i],
+                rsi_current]
+    array_data = np.array(array_data)
+    array_data = array_data.reshape(1, -1)
+
+    #print(loaded_model.predict(array_data))
+
+    if close_price_list[i]>bollinger_up_list[i] or (close_price_list[i]< buy_price - (bollinger_up_list[i]-bollinger_down_list[i])/1 ):
+        
+    
+        point_list.append(i)
+
+        print("YOU HAVE TO SELL:",crypto)
+        st.write("YOU HAVE TO BUY:",crypto)
+
+        fig, ax = plt.subplots()
+        ax.plot(range(0, len(close_price_df)), close_price_list, label='Closing Prices')
+        ax.plot(range(0, len(close_price_df)), bollinger_down_list, label='Bollinger Up', c='black')
+        ax.plot(range(0,len(close_price_df)), bollinger_up_list, label='Bollinger Down', c='black')
+        ax.plot(range(0, len(close_price_df)), sma_list, label='SMA', c='b')
+        ax.set_title(f'{crypto}-EUR Price')
+
+        for i in range(len(point_list)):
+            ax.plot(point_list[i], close_price_list[point_list[i]], 'o',color='red')
+
+        st.pyplot(fig)
 
 
-#     total_transactions += num_of_transactions
-#     total_wins += len(winner_trades)
-#     total_loss += len(loser_trades)
+    if (rsi_current < 30) and (not open_trade) and (cross2)  and cross and (
+
+    bollinger_down_list[i] > close_price_list[i]):# and not is_dowentrend:
+        # and loaded_model.predict(array_data):
+#       
+        print("YOU HAVE TO BUY:",crypto)
+        st.write("YOU HAVE TO BUY:",crypto)
+
+        point_list2.append(i)
 
 
-# print('total_euro', wallet_euro)
-# print('total_transactions', total_transactions)
-# print('total_wins', total_wins)
-# print('total_loss', total_loss)
-# print('total_euro_deposit', total_euro_deposit)
-# print('total_euro_gain', total_euro_gain)
-# print('total_euro_loss', total_euro_loss)
+        print(point_list2)
 
-   
-# plt.plot(range(0, len(close_price_df)), close_price_list, label='Closing Prices')
-# plt.plot(range(0, len(close_price_df)), bollinger_down_list, label='Bollinger Up', c='black')
-# plt.plot(range(0,len(close_price_df)), bollinger_up_list, label='Bollinger Down', c='black')
-# plt.plot(range(0, len(close_price_df)), sma_list, label='SMA', c='b')
+        fig, ax = plt.subplots()
 
-# print(point_list)
-# for i in range(len(point_list)):
-#     plt.plot(point_list2[i], close_price_list[point_list2[i]],'o',color='green')
-# for i in range(len(point_list)):
-#     plt.plot(point_list[i], close_price_list[point_list[i]], 'o',color='red')
+        ax.plot(range(0, len(close_price_df)), close_price_list, label='Closing Prices')
+        ax.plot(range(0, len(close_price_df)), bollinger_down_list, label='Bollinger Up', c='black')
+        ax.plot(range(0,len(close_price_df)), bollinger_up_list, label='Bollinger Down', c='black')
+        ax.plot(range(0, len(close_price_df)), sma_list, label='SMA', c='b')
 
-# plt.show()
+        ax.set_title(f'{crypto}-EUR Price')
 
+
+        for i in range(len(point_list2)):
+            ax.plot(point_list2[i], close_price_list[point_list2[i]],'o',color='green')
+        
+        # ax.show()
+
+        st.pyplot(fig)
+
+     
