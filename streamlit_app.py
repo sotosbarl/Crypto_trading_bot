@@ -380,7 +380,7 @@ for crypto in cryptos:
             point_list.append(i)
 
             print("YOU HAVE TO SELL:",crypto)
-            st.write("YOU HAVE TO BUY:",crypto)
+            st.write("YOU HAVE TO SELL:",crypto)
 
             fig, ax = plt.subplots()
             ax.plot(range(0, len(close_price_df)), close_price_list, label='Closing Prices')
@@ -394,7 +394,15 @@ for crypto in cryptos:
 
             st.pyplot(fig)
 
-
+        
+        
+         fig, ax = plt.subplots()
+         ax.plot(range(0, len(close_price_df)), close_price_list, label='Closing Prices')
+         ax.plot(range(0, len(close_price_df)), bollinger_down_list, label='Bollinger Up', c='black')
+         ax.plot(range(0,len(close_price_df)), bollinger_up_list, label='Bollinger Down', c='black')
+         ax.plot(range(0, len(close_price_df)), sma_list, label='SMA', c='b')
+         ax.set_title(f'{crypto}-EUR Price')
+     
         if (rsi_current < 30) and (not open_trade) and (cross2)  and cross and (
 
         bollinger_down_list[i] > close_price_list[i]):# and not is_dowentrend:
