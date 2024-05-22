@@ -15,7 +15,7 @@ import yfinance as yf
 st.title("Crypto Trading Strategy Analyzer")
 cryptos = ['BTC', 'ETH', 'ADA','BNB', 'XRP', 'SOL','AVAX','DOT', 'SHIB', 'MATIC', 'DOGE', 'CRO','ATOM','LTC' \
  , 'TRX', 'LINK','FTT','BCH','ALGO','XLM','SHIB','HBAR','FIL', 'VET', 'MKR', 
-'RUNE', 'THETA','FTM','FET', 'QNT','BSV','AAVE','NEO','EGLD','STX'] #stx
+'RUNE', 'THETA','FTM','FET', 'QNT','BSV','AAVE','NEO','EGLD'] #stx
 
 # cryptos = ['BTC','ETH']
 
@@ -29,18 +29,27 @@ total_euro_gain = 0
 total_euro_loss = 0
 
 for crypto in cryptos:
+
+
     wallet_euro = 100
 
     ticker = f'{crypto}-EUR'
-    # crypto_data = yf.download(ticker, start='2022-01-01', end='2024-05-01')
-    try:
-        crypto_data = yf.download(tickers=ticker, period="1y", interval="1h")
-        crypto_data = crypto_data.resample('10H').last()
-        # Select only the 'Close' price from the fetched data
-        close_price_df = crypto_data['Close']
-    except Exception as e:
-        continue
+    st.write(crypto)
 
+    # crypto_data = yf.download(ticker, start='2022-01-01', end='2024-05-01')
+    attempts = 3
+    for attempt in range(attempts):
+        try:
+            crypto_data = yf.download(tickers=ticker, period="1y", interval="1h")
+            crypto_data = crypto_data.resample('10H').last()
+            # Select only the 'Close' price from the fetched data
+            close_price_df = crypto_data['Close']
+            break  # If successful, break out of the loop
+        except Exception as e:
+            print(f"Attempt {attempt + 1} failed: {e}")
+            if attempt == attempts - 1:
+                # If it's the last attempt, re-raise the exception
+                raise
     percent=[]
 
     #load the random forest classification model
@@ -374,6 +383,14 @@ for crypto in cryptos:
 
         #print(loaded_model.predict(array_data))
 
+        fig, ax = plt.subplots()
+        ax.plot(range(0, len(close_price_df)), close_price_list, label='Closing Prices')
+        ax.plot(range(0, len(close_price_df)), bollinger_down_list, label='Bollinger Up', c='black')
+        ax.plot(range(0,len(close_price_df)), bollinger_up_list, label='Bollinger Down', c='black')
+        ax.plot(range(0, len(close_price_df)), sma_list, label='SMA', c='b')
+        ax.set_title(f'{crypto}-EUR Price')
+        
+
         if close_price_list[i]>bollinger_up_list[i] or (close_price_list[i]< buy_price - (bollinger_up_list[i]-bollinger_down_list[i])/1 ):
             
         
@@ -382,27 +399,16 @@ for crypto in cryptos:
             print("YOU HAVE TO SELL:",crypto)
             st.write("YOU HAVE TO SELL:",crypto)
 
-            fig, ax = plt.subplots()
-            ax.plot(range(0, len(close_price_df)), close_price_list, label='Closing Prices')
-            ax.plot(range(0, len(close_price_df)), bollinger_down_list, label='Bollinger Up', c='black')
-            ax.plot(range(0,len(close_price_df)), bollinger_up_list, label='Bollinger Down', c='black')
-            ax.plot(range(0, len(close_price_df)), sma_list, label='SMA', c='b')
-            ax.set_title(f'{crypto}-EUR Price')
 
             for i in range(len(point_list)):
                 ax.plot(point_list[i], close_price_list[point_list[i]], 'o',color='red')
 
-            st.pyplot(fig)
+            
+
+        st.pyplot(fig)
 
         
-        
-         fig, ax = plt.subplots()
-         ax.plot(range(0, len(close_price_df)), close_price_list, label='Closing Prices')
-         ax.plot(range(0, len(close_price_df)), bollinger_down_list, label='Bollinger Up', c='black')
-         ax.plot(range(0,len(close_price_df)), bollinger_up_list, label='Bollinger Down', c='black')
-         ax.plot(range(0, len(close_price_df)), sma_list, label='SMA', c='b')
-         ax.set_title(f'{crypto}-EUR Price')
-     
+
         if (rsi_current < 30) and (not open_trade) and (cross2)  and cross and (
 
         bollinger_down_list[i] > close_price_list[i]):# and not is_dowentrend:
